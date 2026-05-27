@@ -23,7 +23,7 @@ st.set_page_config(
 # Sidebar
 st.sidebar.title("🌱 Plant Disease Detection")
 st.sidebar.markdown("""
-### Deep Learning Final Year Project
+### Deep Learning Final Year Project by Kite Nitesh Ramkrushna
 
 This system uses a CNN (Convolutional Neural Network)
 to detect diseases in plant leaves.
