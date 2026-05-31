@@ -127,7 +127,7 @@ if st.button("🔍 Predict Disease"):
                 opencv_image,
                 channels="BGR",
                 caption="Uploaded Leaf Image",
-                use_container_width=True
+                use_column_width=True
             )
 
         # Preprocessing
