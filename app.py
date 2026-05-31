@@ -3,27 +3,65 @@ import numpy as np
 import cv2
 from keras.models import load_model
 
-# Load trained model
-model = load_model("plant_disease_model.h5")
+# ==========================
+# PAGE CONFIGURATION
+# ==========================
 
-# Class names
-CLASS_NAMES = (
-    'Tomato-Bacterial_spot',
-    'Potato-Early_blight',
-    'Corn-Common_rust'
-)
-
-# Page configuration
 st.set_page_config(
     page_title="Plant Disease Detection",
     page_icon="🌿",
     layout="wide"
 )
 
-# Sidebar
+# ==========================
+# LOAD MODEL
+# ==========================
+
+model = load_model("plant_disease_model.h5")
+
+CLASS_NAMES = (
+    "Tomato-Bacterial_spot",
+    "Potato-Early_blight",
+    "Corn-Common_rust"
+)
+
+# ==========================
+# DEVELOPER CARD
+# ==========================
+
+st.markdown("## 👨‍💻 Developer Profile")
+
+col1, col2 = st.columns([1, 3])
+
+with col1:
+    st.image("photo.jpeg", width=180)  # Replace with your image filename
+
+with col2:
+    st.markdown("""
+    # Nitesh Maya Ramkrushna Kitey
+
+    **Master's in Computer Science**
+
+    Plant Disease Detection using CNN, TensorFlow, OpenCV and Streamlit.
+
+    **Skills**
+    - AI/ML
+    - Deep Learning
+    - Computer Vision
+    - TensorFlow
+    - Streamlit
+    """)
+
+st.markdown("---")
+
+# ==========================
+# SIDEBAR
+# ==========================
+
 st.sidebar.title("🌱 Plant Disease Detection")
+
 st.sidebar.markdown("""
-### Deep Learning Final Year Project by Kite Nitesh Ramkrushna
+### Deep Learning Final Year Project
 
 This system uses a CNN (Convolutional Neural Network)
 to detect diseases in plant leaves.
@@ -35,13 +73,19 @@ to detect diseases in plant leaves.
 - Streamlit
 """)
 
-st.sidebar.success("Model Loaded Successfully")
+st.sidebar.success("✅ Model Loaded Successfully")
 
-# Main Title
+# ==========================
+# MAIN TITLE
+# ==========================
+
 st.title("🌿 Plant Disease Detection using CNN")
 st.markdown("---")
 
-# About section
+# ==========================
+# ABOUT PROJECT
+# ==========================
+
 with st.expander("📖 About This Project"):
     st.write("""
     This application predicts plant diseases using
@@ -51,18 +95,23 @@ with st.expander("📖 About This Project"):
     will identify the disease along with confidence score.
     """)
 
-# File uploader
+# ==========================
+# FILE UPLOADER
+# ==========================
+
 plant_image = st.file_uploader(
     "📤 Upload Plant Leaf Image",
     type=["jpg", "jpeg", "png"]
 )
 
-# Predict button
+# ==========================
+# PREDICTION
+# ==========================
+
 if st.button("🔍 Predict Disease"):
 
     if plant_image is not None:
 
-        # Convert uploaded file to OpenCV image
         file_bytes = np.asarray(
             bytearray(plant_image.read()),
             dtype=np.uint8
@@ -70,10 +119,9 @@ if st.button("🔍 Predict Disease"):
 
         opencv_image = cv2.imdecode(file_bytes, 1)
 
-        # Create two columns
         col1, col2 = st.columns(2)
 
-        # Display image
+        # Display Image
         with col1:
             st.image(
                 opencv_image,
@@ -82,28 +130,20 @@ if st.button("🔍 Predict Disease"):
                 use_container_width=True
             )
 
-        # Resize image
+        # Preprocessing
         opencv_image = cv2.resize(opencv_image, (256, 256))
-
-        # Normalize image
         opencv_image = opencv_image / 255.0
-
-        # Convert image to 4D
         opencv_image = opencv_image.reshape(1, 256, 256, 3)
 
         # Prediction
         Y_pred = model.predict(opencv_image)
 
         prediction = np.argmax(Y_pred)
-
         result = CLASS_NAMES[prediction]
-
         confidence = np.max(Y_pred) * 100
 
-        # Split plant and disease
-        plant, disease = result.split('-')
+        plant, disease = result.split("-")
 
-        # Disease information
         disease_info = {
             "Bacterial_spot":
                 "Bacterial infection causing dark spots on leaves.",
@@ -115,7 +155,6 @@ if st.button("🔍 Predict Disease"):
                 "Fungal disease creating rust-colored pustules."
         }
 
-        # Treatment suggestions
         treatment = {
             "Bacterial_spot":
                 "Use copper-based bactericides and remove infected leaves.",
@@ -127,7 +166,7 @@ if st.button("🔍 Predict Disease"):
                 "Use resistant crop varieties and fungicides."
         }
 
-        # Prediction results
+        # Results
         with col2:
 
             st.subheader("🩺 Prediction Result")
@@ -142,16 +181,22 @@ if st.button("🔍 Predict Disease"):
             )
 
             st.info(
-                f"📖 Disease Info:\n\n{disease_info.get(disease)}"
+                f"📖 Disease Information:\n\n{disease_info.get(disease)}"
             )
 
             st.warning(
-                f"💊 Treatment:\n\n{treatment.get(disease)}"
+                f"💊 Recommended Treatment:\n\n{treatment.get(disease)}"
             )
 
     else:
         st.warning("⚠️ Please upload an image first.")
 
-# Footer
+# ==========================
+# FOOTER
+# ==========================
+
 st.markdown("---")
-st.caption("Final Year Project by Kite Nitesh Ramkrushna | Plant Disease Detection using Deep Learning")
+
+st.caption(
+    "Plant Disease Detection using CNN | Final Year Project"
+)
